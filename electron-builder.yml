@@ -49,3 +49,8 @@ linux:
 directories:
   buildResources: 'build'
   output: 'dist'
+
+
+publish:
+  provider: github
+  releaseType: draft  # 💡 안전하게 '임시 저장(Draft)' 상태로 먼저 업로드됩니다.
