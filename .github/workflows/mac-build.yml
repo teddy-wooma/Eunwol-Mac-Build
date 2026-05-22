@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    permissions:
+      contents: write # 릴리즈 작성을 위한 권한 부여
 
     steps:
       - name: Check out Git repository
@@ -22,11 +24,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build macOS Application and Force Publish
-        run: npx electron-builder --mac --publish always
+      - name: Build macOS Application (Compile Only)
+        # 🚀 업로드는 신경 쓰지 말고 파일만 만들라고 명령합니다.
+        run: npx electron-builder --mac
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          # 🌟 [치트키] 빌드 엔진이 태그 상태임을 강제로 인지하도록 환경 변수를 수동 주입합니다.
-          ELECTRON_BUILDER_ALLOW_EMPTY_ARCH: true
-          BUILD_SOURCEBRANCH: ${{ github.ref }}
-          BUILD_SOURCEVERSION: ${{ github.sha }}
+
+      - name: Force Upload to GitHub Releases
+        # 🌟 깃허브 공식 배포 로봇이 dist 폴더에 생성된 .dmg 파일들을 강제로 Releases에 때려 박습니다.
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/*.dmg
+            dist/*.yml
+          draft: true # 안전하게 임시 저장 상태로 업로드
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
