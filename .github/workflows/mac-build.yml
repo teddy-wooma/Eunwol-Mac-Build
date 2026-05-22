@@ -3,11 +3,11 @@ name: Build and Release macOS Launcher
 on:
   push:
     tags:
-      - 'v*' # v1.1.0 같은 버전 태그가 푸시될 때만 작동
+      - 'v*'
 
 jobs:
   build:
-    runs-on: macos-latest # 깃허브의 원격 macOS 컴퓨터 가동
+    runs-on: macos-latest
 
     steps:
       - name: Check out Git repository
@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build macOS Application and Publish
-        # 🚀 npx 명령어로 electron-builder를 직접 호출하면서 '--publish always' 옵션을 쐐기로 박아줍니다.
-        run: npx electron-builder --mac --publish always
+      - name: Build macOS Application and Force Publish
+        # 🚀 명령어 뒤에 설정을 직접 때려 박아 깃허브 맥 컴퓨터가 다른 생각을 못 하게 만듭니다.
+        run: npx electron-builder --mac -c.publish.provider=github -c.publish.releaseType=draft --publish always
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # 깃허브 Secrets에 저장한 열쇠 연동
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
