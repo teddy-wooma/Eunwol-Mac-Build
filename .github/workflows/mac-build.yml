@@ -23,7 +23,10 @@ jobs:
         run: npm ci
 
       - name: Build macOS Application and Force Publish
-        # 🚀 명령어 뒤에 설정을 직접 때려 박아 깃허브 맥 컴퓨터가 다른 생각을 못 하게 만듭니다.
-        run: npx electron-builder --mac -c.publish.provider=github -c.publish.releaseType=draft --publish always
+        run: npx electron-builder --mac --publish always
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          # 🌟 [치트키] 빌드 엔진이 태그 상태임을 강제로 인지하도록 환경 변수를 수동 주입합니다.
+          ELECTRON_BUILDER_ALLOW_EMPTY_ARCH: true
+          BUILD_SOURCEBRANCH: ${{ github.ref }}
+          BUILD_SOURCEVERSION: ${{ github.sha }}
