@@ -14,8 +14,8 @@ extraResources:
   - 'libraries'
 
 # Windows Configuration
-win: 
-  target: 
+win:
+  target:
     - target: 'nsis'
       arch: 'x64'
 
@@ -37,7 +37,7 @@ mac:
   category: 'public.app-category.games'
 
 # Linux Configuration
-linux: 
+linux:
   target: 'AppImage'
   maintainer: 'Daniel Scalzi, peunsu'
   vendor: 'Daniel Scalzi, peunsu'
@@ -45,12 +45,10 @@ linux:
   description: 'Custom launcher which allows users to join modded servers. All mods, configurations, and updates are handled automatically.'
   category: 'Game'
 
-
 directories:
   buildResources: 'build'
   output: 'dist'
 
-
-publish:
-  provider: github
-  releaseType: draft  # 💡 안전하게 '임시 저장(Draft)' 상태로 먼저 업로드됩니다.
+# 🌟 [교정] 빌드 엔진이 수동으로 업로드하려다 꼬이지 않도록 배포 기능을 완전히 비활성화합니다.
+# 파일 업로드는 우리가 세팅한 깃허브 전문 업로드 로봇이 전담할 예정입니다.
+publish: null
