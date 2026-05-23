@@ -49,6 +49,9 @@ directories:
   buildResources: 'build'
   output: 'dist'
 
-# 🌟 [교정] 빌드 엔진이 수동으로 업로드하려다 꼬이지 않도록 배포 기능을 완전히 비활성화합니다.
-# 파일 업로드는 우리가 세팅한 깃허브 전문 업로드 로봇이 전담할 예정입니다.
-publish: null
+# 🌟 [핵심] 빌드 엔진에게 릴리즈에 무조건 강제 업로드하라고 대본을 짭니다.
+publish:
+  provider: github
+  owner: teddy-wooma
+  repo: Eunwol-Mac-Build     # 👈 현재 맥 빌드가 돌아가고 있는 저장소 이름입니다.
+  releaseType: draft         # 안전하게 임시 저장(Draft) 상태로 배달됩니다.

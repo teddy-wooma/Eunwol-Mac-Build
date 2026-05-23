@@ -1,54 +1,31 @@
-appId: 'luna-eunwol-launcher'
-productName: 'luna-eunwol-launcher'
-artifactName: 'luna-eunwol-launcher-${version}.${ext}'
+name: Build and Release macOS Launcher
 
-copyright: 'Copyright © 2018-2026 Daniel Scalzi, Copyright © 2024 peunsu'
+on:
+  push:
+    tags:
+      - 'v*'
 
-asar: true
-compression: 'maximum'
+jobs:
+  build:
+    runs-on: macos-latest
+    permissions:
+      contents: write # 릴리즈 작성을 위해 꼭 필요한 권한
 
-files:
-  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs}'
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
 
-extraResources:
-  - 'libraries'
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
-# Windows Configuration
-win:
-  target:
-    - target: 'nsis'
-      arch: 'x64'
+      - name: Install dependencies
+        run: npm ci
 
-# Windows Installer Configuration
-nsis:
-  oneClick: false
-  perMachine: false
-  allowElevation: true
-  allowToChangeInstallationDirectory: true
-
-# macOS Configuration (🌟 여기에 artifactName을 명시해 dmg 파일 경로를 고정합니다)
-mac:
-  target:
-    - target: 'dmg'
-      arch:
-        - 'x64'
-        - 'arm64'
-  artifactName: 'luna-eunwol-launcher-${version}-${arch}.${ext}'
-  category: 'public.app-category.games'
-
-# Linux Configuration
-linux:
-  target: 'AppImage'
-  maintainer: 'Daniel Scalzi, peunsu'
-  vendor: 'Daniel Scalzi, peunsu'
-  synopsis: 'Modded Minecraft Launcher'
-  description: 'Custom launcher which allows users to join modded servers. All mods, configurations, and updates are handled automatically.'
-  category: 'Game'
-
-directories:
-  buildResources: 'build'
-  output: 'dist'
-
-# 🌟 [치트키] 빌드 엔진 자체의 깃허브 업로드 기능을 완전히 꺼버립니다.
-# 오직 로컬(맥 가상 컴퓨터)의 'dist' 폴더에 파일만 이쁘게 뱉어내도록 만듭니다.
-publish: null
+      - name: Build macOS Application and Force Publish
+        # 🚀 다른 거 안 거치고 빌드 엔진에게 무조건(--publish always) 올리라고 멱살 잡고 명령합니다.
+        run: npx electron-builder --mac --publish always
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
