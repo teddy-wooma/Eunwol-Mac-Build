@@ -1,6 +1,6 @@
 {
   "name": "luna-eunwol-launcher",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "productName": "luna-eunwol-launcher",
   "description": "Modded Minecraft Launcher",
   "author": "Daniel Scalzi (https://github.com/dscalzi/), peunsu (https://github.com/peunsu)",
@@ -48,5 +48,55 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/teddy-wooma/luna-eunwol-launcher.git"
+  },
+
+  "build": {
+    "appId": "luna-eunwol-launcher",
+    "productName": "luna-eunwol-launcher",
+    "asar": true,
+    "compression": "maximum",
+    "files": [
+      "!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs}"
+    ],
+    "extraResources": [
+      "libraries"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": "x64"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "artifactName": "luna-eunwol-launcher-${version}-${arch}.${ext}",
+      "category": "public.app-category.games"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "teddy-wooma",
+      "repo": "Eunwol-Mac-Build",
+      "releaseType": "draft"
+    },
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    }
   }
 }
